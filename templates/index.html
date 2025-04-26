@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MindBot - Your Mental Health Companion</title>
+    <style>
+        body {
+
+            background: url('/static/images/moon.jpg') no-repeat center center fixed;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+
+        }
+
+
+
+        .chat-container {
+            max-width: 500px;
+            margin: 60px auto;
+            background: rgba(0, 0, 0, 0.4);
+            /* Dark glass effect */
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+            color: #f0f0f0;
+            backdrop-filter: blur(10px);
+            /* Glass effect */
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        #chatbox {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            /* transparent background */
+            backdrop-filter: blur(6px);
+            /* frosted glass effect */
+            color: #f0f0f0;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #aaa;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 10px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chat-container">
+        <h1>MindBot 💬</h1>
+        <div id="chatbox"></div>
+        <input type="text" id="userInput" placeholder="Type your message..." />
+        <button onclick="sendMessage()">Send</button>
+        <button onclick="downloadChat()">Download Chat</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+            var userInput = document.getElementById("userInput").value;
+            var chatbox = document.getElementById("chatbox");
+            chatbox.innerHTML += "<p><strong>You:</strong> " + userInput + "</p>";
+            document.getElementById("userInput").value = "";
+
+            fetch("/get?msg=" + encodeURIComponent(userInput))
+                .then(response => response.text())
+                .then(data => {
+                    chatbox.innerHTML += "<p><strong>MindBot:</strong> " + data + "</p>";
+                    chatbox.scrollTop = chatbox.scrollHeight;
+                });
+        }
+
+        function downloadChat() {
+            window.location.href = "/download";
+        }
+    </script>
+</body>
+
+</html>
