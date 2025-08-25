@@ -40,27 +40,58 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
             background: rgba(0, 0, 0, 0.2);
-            /* transparent background */
             backdrop-filter: blur(6px);
-            /* frosted glass effect */
             color: #f0f0f0;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            padding: 15px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        #chatbox p {
+            margin: 8px 0;
+            padding: 8px 12px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 3px solid rgba(74, 175, 80, 0.8);
+        }
+        
+        #chatbox p:nth-child(even) {
+            border-left: 3px solid rgba(33, 150, 243, 0.8);
+            background: rgba(255, 255, 255, 0.03);
         }
 
         input[type="text"] {
             width: 70%;
-            padding: 10px;
+            padding: 12px;
             border-radius: 10px;
-            border: 1px solid #aaa;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: #f0f0f0;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="text"]:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+        }
+        
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.6);
         }
 
         button {
-            padding: 10px 15px;
+            padding: 12px 18px;
             border: none;
             border-radius: 10px;
             background-color: #4CAF50;
             color: white;
             cursor: pointer;
+            margin: 0 5px;
+            font-size: 14px;
+            transition: all 0.3s ease;
         }
 
         button:hover {
@@ -80,15 +111,32 @@
 
     <script>
         function sendMessage() {
-            var userInput = document.getElementById("userInput").value;
+            var userInput = document.getElementById("userInput").value.trim();
+            if (!userInput) return; // Don't send empty messages
+            
             var chatbox = document.getElementById("chatbox");
+            
+            // Add user message
             chatbox.innerHTML += "<p><strong>You:</strong> " + userInput + "</p>";
             document.getElementById("userInput").value = "";
+            
+            // Show typing indicator
+            chatbox.innerHTML += "<p id='typing'><strong>MindBot:</strong> <em>typing...</em></p>";
+            chatbox.scrollTop = chatbox.scrollHeight;
 
             fetch("/get?msg=" + encodeURIComponent(userInput))
                 .then(response => response.text())
                 .then(data => {
+                    // Remove typing indicator
+                    document.getElementById('typing').remove();
+                    
+                    // Add bot response
                     chatbox.innerHTML += "<p><strong>MindBot:</strong> " + data + "</p>";
+                    chatbox.scrollTop = chatbox.scrollHeight;
+                })
+                .catch(error => {
+                    document.getElementById('typing').remove();
+                    chatbox.innerHTML += "<p><strong>MindBot:</strong> Sorry, I'm having trouble responding right now. Please try again.</p>";
                     chatbox.scrollTop = chatbox.scrollHeight;
                 });
         }
@@ -96,6 +144,20 @@
         function downloadChat() {
             window.location.href = "/download";
         }
+        
+        // Add Enter key support
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById("userInput").addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // Welcome message
+            var chatbox = document.getElementById("chatbox");
+            chatbox.innerHTML = "<p><strong>MindBot:</strong> Hello! 👋 I'm here to listen and support you. How are you feeling today?</p>";
+        });
     </script>
 </body>
 
