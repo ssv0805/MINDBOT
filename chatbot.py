@@ -1,6 +1,7 @@
 
 import random
 from textblob import TextBlob
+import re
 
 # Enhanced response patterns
 POSITIVE_RESPONSES = [
@@ -24,11 +25,51 @@ NEUTRAL_RESPONSES = [
     "I'm here for you. 🌸 Is there anything specific you'd like to talk about?"
 ]
 
-# Keywords for specific mental health topics
-ANXIETY_KEYWORDS = ['anxious', 'anxiety', 'worried', 'nervous', 'panic', 'stressed', 'overwhelmed']
-DEPRESSION_KEYWORDS = ['sad', 'depressed', 'hopeless', 'empty', 'lonely', 'worthless', 'tired']
-ANGER_KEYWORDS = ['angry', 'furious', 'mad', 'frustrated', 'irritated', 'annoyed']
-GRATITUDE_KEYWORDS = ['grateful', 'thankful', 'blessed', 'appreciate', 'lucky']
+# Enhanced keywords and patterns
+ANXIETY_KEYWORDS = ['anxious', 'anxiety', 'worried', 'nervous', 'panic', 'stressed', 'overwhelmed', 'scared', 'fear']
+DEPRESSION_KEYWORDS = ['sad', 'depressed', 'hopeless', 'empty', 'lonely', 'worthless', 'tired', 'exhausted', 'down']
+ANGER_KEYWORDS = ['angry', 'furious', 'mad', 'frustrated', 'irritated', 'annoyed', 'upset', 'pissed']
+GRATITUDE_KEYWORDS = ['grateful', 'thankful', 'blessed', 'appreciate', 'lucky', 'happy', 'joy']
+
+# Relationship and social keywords
+RELATIONSHIP_KEYWORDS = ['friend', 'boyfriend', 'girlfriend', 'partner', 'family', 'mom', 'dad', 'sister', 'brother']
+CONFLICT_KEYWORDS = ['fight', 'argument', 'refused', 'rejected', 'ignored', 'betrayed', 'hurt me', 'disappointed']
+
+def analyze_context(user_input):
+    """Analyze the context and content of user input more deeply"""
+    user_input_lower = user_input.lower()
+    
+    # Check for relationship conflicts
+    if any(keyword in user_input_lower for keyword in RELATIONSHIP_KEYWORDS) and any(keyword in user_input_lower for keyword in CONFLICT_KEYWORDS):
+        return "relationship_conflict"
+    
+    # Check for specific scenarios
+    if "refused" in user_input_lower or "won't" in user_input_lower or "wouldn't" in user_input_lower:
+        return "refusal_issue"
+    
+    if "password" in user_input_lower or "personal" in user_input_lower:
+        return "privacy_boundary"
+    
+    if "laptop" in user_input_lower or "computer" in user_input_lower or "phone" in user_input_lower:
+        return "device_sharing"
+    
+    return None
+
+def get_contextual_response(context, user_input):
+    """Get responses based on context analysis"""
+    if context == "relationship_conflict":
+        return "It sounds like you're having some difficulties with someone close to you. 💙 Relationship conflicts can be really painful. Would you like to talk about what happened and how it made you feel?"
+    
+    elif context == "refusal_issue":
+        return "I understand that being refused or told 'no' can feel hurtful, especially from someone you trust. 🫂 Sometimes people have their own reasons for setting boundaries. How did this situation make you feel?"
+    
+    elif context == "privacy_boundary":
+        return "It can feel disappointing when someone won't share something personal with us. 💭 But everyone has a right to privacy and personal boundaries. Perhaps your friend has reasons for keeping their password private - it's actually a good security practice. How are you processing these feelings?"
+    
+    elif context == "device_sharing":
+        return "I can understand feeling hurt when someone doesn't want to share their personal devices. 💻 Many people keep their devices private for security, personal reasons, or just comfort. It doesn't necessarily reflect how they feel about you as a friend. What's bothering you most about this situation?"
+    
+    return None
 
 def get_bot_response(user_input):
     if not user_input or len(user_input.strip()) == 0:
@@ -37,6 +78,13 @@ def get_bot_response(user_input):
     user_input_lower = user_input.lower()
     blob = TextBlob(user_input)
     sentiment_score = blob.sentiment.polarity
+    
+    # Analyze context first
+    context = analyze_context(user_input)
+    if context:
+        contextual_response = get_contextual_response(context, user_input)
+        if contextual_response:
+            return contextual_response
     
     # Check for specific mental health keywords
     if any(keyword in user_input_lower for keyword in ANXIETY_KEYWORDS):
@@ -51,6 +99,13 @@ def get_bot_response(user_input):
     if any(keyword in user_input_lower for keyword in GRATITUDE_KEYWORDS):
         return "I love hearing about gratitude! 🌟 Focusing on what we're thankful for can be so powerful. What else has been bringing you joy lately?"
     
+    # Better handling of short responses
+    if user_input_lower in ['yes', 'yeah', 'yep', 'ok', 'okay']:
+        return "I'm glad you're open to talking about it. 💙 Take your time - what would you like to share with me?"
+    
+    if user_input_lower in ['no', 'nah', 'not really']:
+        return "That's perfectly okay. 🌸 Sometimes we need time to process things. I'm here whenever you feel ready to talk, or if you just want some company."
+    
     # Greetings
     if any(greeting in user_input_lower for greeting in ['hello', 'hi', 'hey', 'good morning', 'good evening']):
         return "Hello there! 👋 I'm MindBot, your mental health companion. I'm here to listen and support you. How are you feeling today?"
@@ -58,6 +113,10 @@ def get_bot_response(user_input):
     # Goodbye
     if any(farewell in user_input_lower for farewell in ['bye', 'goodbye', 'see you', 'talk later']):
         return "Take care of yourself! 🌸 Remember, I'm always here when you need someone to talk to. You're stronger than you know! 💪"
+    
+    # Better response to vague negative feelings
+    if user_input_lower in ['not great', 'bad', 'terrible', 'awful', 'horrible']:
+        return "I'm sorry to hear you're not feeling great. 💙 That sounds difficult. Would you like to tell me more about what's going on? Sometimes talking about it can help lighten the load."
     
     # Default sentiment-based responses
     if sentiment_score > 0.2:
