@@ -39,19 +39,24 @@ def analyze_context(user_input):
     """Analyze the context and content of user input more deeply"""
     user_input_lower = user_input.lower()
     
-    # Check for relationship conflicts
+    # Check for relationship conflicts first
     if any(keyword in user_input_lower for keyword in RELATIONSHIP_KEYWORDS) and any(keyword in user_input_lower for keyword in CONFLICT_KEYWORDS):
         return "relationship_conflict"
     
-    # Check for specific scenarios
+    # Check for refusal/rejection scenarios
     if "refused" in user_input_lower or "won't" in user_input_lower or "wouldn't" in user_input_lower:
         return "refusal_issue"
     
+    # Check for help/support disappointment
+    if ("help" in user_input_lower or "always" in user_input_lower) and ("but" in user_input_lower or "didn't like" in user_input_lower):
+        return "disappointment_help"
+    
+    # Check for device sharing issues
+    if ("laptop" in user_input_lower or "computer" in user_input_lower or "phone" in user_input_lower) and ("refused" in user_input_lower or "won't" in user_input_lower):
+        return "device_sharing"
+    
     if "password" in user_input_lower or "personal" in user_input_lower:
         return "privacy_boundary"
-    
-    if "laptop" in user_input_lower or "computer" in user_input_lower or "phone" in user_input_lower:
-        return "device_sharing"
     
     return None
 
@@ -63,11 +68,14 @@ def get_contextual_response(context, user_input):
     elif context == "refusal_issue":
         return "I understand that being refused or told 'no' can feel hurtful, especially from someone you trust. 🫂 Sometimes people have their own reasons for setting boundaries. How did this situation make you feel?"
     
-    elif context == "privacy_boundary":
-        return "It can feel disappointing when someone won't share something personal with us. 💭 But everyone has a right to privacy and personal boundaries. Perhaps your friend has reasons for keeping their password private - it's actually a good security practice. How are you processing these feelings?"
+    elif context == "disappointment_help":
+        return "I can hear the disappointment in your words. 💙 It really hurts when we feel like we're always there for someone, but they don't reciprocate when we need something. Your feelings are completely valid - it's natural to feel let down when this happens. Sometimes people have different ways of showing care, or they might have boundaries we don't fully understand. What hurt you the most about this situation?"
     
     elif context == "device_sharing":
         return "I can understand feeling hurt when someone doesn't want to share their personal devices. 💻 Many people keep their devices private for security, personal reasons, or just comfort. It doesn't necessarily reflect how they feel about you as a friend. What's bothering you most about this situation?"
+    
+    elif context == "privacy_boundary":
+        return "It can feel disappointing when someone won't share something personal with us. 💭 But everyone has a right to privacy and personal boundaries. Perhaps your friend has reasons for keeping their password private - it's actually a good security practice. How are you processing these feelings?"
     
     return None
 
