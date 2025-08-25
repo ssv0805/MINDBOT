@@ -46,3 +46,15 @@
 [2025-08-25 12:16:49] You: yes
 [2025-08-25 12:16:49] MindBot: I appreciate you opening up. 🤝 How has your day been overall?
 
+[2025-08-25 12:18:39] You: not great
+[2025-08-25 12:18:39] MindBot: I'm sorry to hear you're not feeling great. 💙 That sounds difficult. Would you like to tell me more about what's going on? Sometimes talking about it can help lighten the load.
+
+[2025-08-25 12:18:48] You: yes
+[2025-08-25 12:18:48] MindBot: I'm glad you're open to talking about it. 💙 Take your time - what would you like to share with me?
+
+[2025-08-25 12:19:10] You: u know today my friend refused to give me her laptop
+[2025-08-25 12:19:10] MindBot: It sounds like you're having some difficulties with someone close to you. 💙 Relationship conflicts can be really painful. Would you like to talk about what happened and how it made you feel?
+
+[2025-08-25 12:19:43] You: i always help her but she did this which i didnt liked
+[2025-08-25 12:19:43] MindBot: Hello there! 👋 I'm MindBot, your mental health companion. I'm here to listen and support you. How are you feeling today?
+
