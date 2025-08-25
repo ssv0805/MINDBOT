@@ -3,6 +3,10 @@ import random
 from textblob import TextBlob
 import re
 
+# Simple conversation memory
+conversation_history = []
+user_emotional_state = None
+
 # Enhanced response patterns
 POSITIVE_RESPONSES = [
     "I'm really glad you're feeling positive! 😊 That's wonderful to hear!",
@@ -30,10 +34,14 @@ ANXIETY_KEYWORDS = ['anxious', 'anxiety', 'worried', 'nervous', 'panic', 'stress
 DEPRESSION_KEYWORDS = ['sad', 'depressed', 'hopeless', 'empty', 'lonely', 'worthless', 'tired', 'exhausted', 'down']
 ANGER_KEYWORDS = ['angry', 'furious', 'mad', 'frustrated', 'irritated', 'annoyed', 'upset', 'pissed']
 GRATITUDE_KEYWORDS = ['grateful', 'thankful', 'blessed', 'appreciate', 'lucky', 'happy', 'joy']
+CONFUSION_KEYWORDS = ['confused', 'lost', 'unsure', 'dont know', "don't know", 'uncertain', 'mixed feelings']
+LONELINESS_KEYWORDS = ['lonely', 'alone', 'isolated', 'no one understands', 'nobody cares', 'by myself']
+EXCITEMENT_KEYWORDS = ['excited', 'thrilled', 'pumped', 'can\'t wait', 'amazing', 'awesome', 'fantastic']
+CRISIS_KEYWORDS = ['suicide', 'kill myself', 'end it all', 'not worth living', 'better off dead', 'hurt myself', 'self harm']
 
 # Relationship and social keywords
-RELATIONSHIP_KEYWORDS = ['friend', 'boyfriend', 'girlfriend', 'partner', 'family', 'mom', 'dad', 'sister', 'brother']
-CONFLICT_KEYWORDS = ['fight', 'argument', 'refused', 'rejected', 'ignored', 'betrayed', 'hurt me', 'disappointed']
+RELATIONSHIP_KEYWORDS = ['friend', 'boyfriend', 'girlfriend', 'partner', 'family', 'mom', 'dad', 'sister', 'brother', 'crush', 'colleague']
+CONFLICT_KEYWORDS = ['fight', 'argument', 'refused', 'rejected', 'ignored', 'betrayed', 'hurt me', 'disappointed', 'let me down']
 
 def analyze_context(user_input):
     """Analyze the context and content of user input more deeply"""
@@ -80,12 +88,31 @@ def get_contextual_response(context, user_input):
     return None
 
 def get_bot_response(user_input):
+    global conversation_history, user_emotional_state
+    
     if not user_input or len(user_input.strip()) == 0:
         return "I'm here to listen. What's on your mind? 💙"
+    
+    # Add to conversation history
+    conversation_history.append(user_input.lower())
+    if len(conversation_history) > 10:  # Keep last 10 messages
+        conversation_history.pop(0)
     
     user_input_lower = user_input.lower()
     blob = TextBlob(user_input)
     sentiment_score = blob.sentiment.polarity
+    
+    # Crisis detection - highest priority
+    if any(keyword in user_input_lower for keyword in CRISIS_KEYWORDS):
+        return "⚠️ I'm very concerned about you right now. Please reach out for immediate help:\n\n🆘 **Crisis Hotlines:**\n• National Suicide Prevention Lifeline: 988\n• Crisis Text Line: Text HOME to 741741\n• International Association for Suicide Prevention: https://www.iasp.info/resources/Crisis_Centres/\n\nYou matter, and there are people who want to help you through this. Please don't face this alone. 💙"
+    
+    # Track emotional state
+    if any(keyword in user_input_lower for keyword in DEPRESSION_KEYWORDS):
+        user_emotional_state = "sad"
+    elif any(keyword in user_input_lower for keyword in ANXIETY_KEYWORDS):
+        user_emotional_state = "anxious"
+    elif any(keyword in user_input_lower for keyword in ANGER_KEYWORDS):
+        user_emotional_state = "angry"
     
     # Analyze context first
     context = analyze_context(user_input)
@@ -106,6 +133,15 @@ def get_bot_response(user_input):
     
     if any(keyword in user_input_lower for keyword in GRATITUDE_KEYWORDS):
         return "I love hearing about gratitude! 🌟 Focusing on what we're thankful for can be so powerful. What else has been bringing you joy lately?"
+    
+    if any(keyword in user_input_lower for keyword in CONFUSION_KEYWORDS):
+        return "It sounds like you're feeling uncertain about something. 🤔 That's completely normal - life can be confusing sometimes. Would you like to talk through what's making you feel unsure?"
+    
+    if any(keyword in user_input_lower for keyword in LONELINESS_KEYWORDS):
+        return "I hear that you're feeling lonely right now. 🫂 That can be really difficult to experience. Remember that feeling alone doesn't mean you are alone - I'm here with you. What's been making you feel this way?"
+    
+    if any(keyword in user_input_lower for keyword in EXCITEMENT_KEYWORDS):
+        return "I can feel your excitement! ✨ That's wonderful! It's so great when something makes us feel energized and happy. What's got you feeling so excited?"
     
     # Better handling of short responses
     if user_input_lower in ['yes', 'yeah', 'yep', 'ok', 'okay']:
