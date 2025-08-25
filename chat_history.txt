@@ -58,3 +58,24 @@
 [2025-08-25 12:19:43] You: i always help her but she did this which i didnt liked
 [2025-08-25 12:19:43] MindBot: Hello there! 👋 I'm MindBot, your mental health companion. I'm here to listen and support you. How are you feeling today?
 
+[2025-08-25 12:20:59] You: i am sad
+[2025-08-25 12:20:59] MindBot: I hear that you're going through a difficult time. 🌙 Your feelings are valid, and it's brave of you to reach out. Even small steps forward count. What's one small thing that brought you even a tiny bit of comfort today?
+
+[2025-08-25 12:21:14] You: she didnt share her latop with me
+[2025-08-25 12:21:14] MindBot: I appreciate you opening up. 🤝 How has your day been overall?
+
+[2025-08-25 12:21:23] You: not great
+[2025-08-25 12:21:23] MindBot: I'm sorry to hear you're not feeling great. 💙 That sounds difficult. Would you like to tell me more about what's going on? Sometimes talking about it can help lighten the load.
+
+[2025-08-25 12:21:42] You: my friend refused to share her laptop with me
+[2025-08-25 12:21:42] MindBot: It sounds like you're having some difficulties with someone close to you. 💙 Relationship conflicts can be really painful. Would you like to talk about what happened and how it made you feel?
+
+[2025-08-25 12:21:56] You: it made me feel very bad
+[2025-08-25 12:21:56] MindBot: It sounds like you're feeling really frustrated right now. 🔥 Anger can be a valid response to difficult situations. Would it help to talk about what triggered these feelings?
+
+[2025-08-25 12:22:18] You: her refusal after me being always helpful to her
+[2025-08-25 12:22:18] MindBot: Thank you for trusting me with your thoughts. 💫 What's been on your mind lately?
+
+[2025-08-25 12:22:29] You: idk
+[2025-08-25 12:22:29] MindBot: Thank you for trusting me with your thoughts. 💫 What's been on your mind lately?
+
